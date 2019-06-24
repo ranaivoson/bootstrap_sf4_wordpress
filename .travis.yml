@@ -2,7 +2,7 @@ sudo: required
 services:
     - docker
 
-before_deploy:
+script:
     - docker build -t ranaivoson0/artamis-web-app ./web-app
     - docker build -t ranaivoson0/artamis-proxy ./proxy
 
