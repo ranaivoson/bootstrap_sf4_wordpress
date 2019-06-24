@@ -2,7 +2,13 @@ sudo: required
 services:
     - docker
 
+before_install:
+    - docker build -t ranaivoson0/artamis-web-app ./web-app
+
 script:
+    - docker run ranaivoson0/artamis-web-app ./bin/phpunit
+
+after_success:
     - docker build -t ranaivoson0/artamis-web-app ./web-app
     - docker build -t ranaivoson0/artamis-proxy ./proxy
 
