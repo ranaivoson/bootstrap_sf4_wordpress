@@ -1,0 +1,65 @@
+version: '3'
+services:
+    app:
+        build:
+            context: web-app/build/nginx
+            dockerfile: Dockerfile.dev
+        restart: always
+        volumes:
+            - /web-app/vendor
+            - ./web-app:/app
+
+    wordpress:
+        image: wordpress
+        restart: always
+        depends_on:
+            - mysql
+        links:
+            - mysql
+        volumes:
+            - ./wordpress:/var/www/html/
+        environment:
+            WORDPRESS_DB_HOST: mysql
+            WORDPRESS_DB_USER: root
+            WORDPRESS_DB_PASSWORD: root
+            WORDPRESS_DB_NAME: wordpress
+
+    mysql:
+        build:
+            context: ./mysql
+            dockerfile: Dockerfile.dev
+        restart: always
+        volumes:
+            - ./mysql/db:/var/lib/mysql
+        ports:
+            - '3306:3306'
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=1
+            - MYSQL_ROOT_PASSWORD=root
+
+    php:
+        build:
+            context: ./web-app
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /web-app/vendor
+            - ./web-app:/app
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - mysql
+        ports:
+            - '8080:80'
+        links:
+            - mysql
+        environment:
+            - PMA_HOST=mysql
+
+    proxy:
+        build:
+            context: ./proxy
+            dockerfile: Dockerfile.dev
+        ports:
+            - '80:80'
+        restart: always
