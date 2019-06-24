@@ -1,0 +1,13 @@
+sudo: required
+services:
+    - docker
+
+before_deploy:
+    - docker build -t ranaivoson0/artamis-web-app ./web-app
+    - docker build -t ranaivoson0/artamis-proxy ./proxy
+
+    # Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push ranaivoson0/artamis-web-app
+    - docker push ranaivoson0/artamis-proxy
+
