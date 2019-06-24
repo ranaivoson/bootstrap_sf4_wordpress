@@ -5,11 +5,8 @@ services:
 before_install:
     - docker build -t ranaivoson0/artamis-web-app ./web-app
 
-install:
-    - docker run ranaivoson0/artamis-web-app php bin/phpunit install
-
 script:
-    - docker run ranaivoson0/artamis-web-app phpunit
+    - docker run ranaivoson0/artamis-web-app php bin/phpunit
 
 after_success:
     - docker build -t ranaivoson0/artamis-web-app ./web-app
